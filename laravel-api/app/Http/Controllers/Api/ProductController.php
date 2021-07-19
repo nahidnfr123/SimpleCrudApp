@@ -12,10 +12,10 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProductController extends Controller
 {
-    public function __construct()
+    /*public function __construct()
     {
         $this->middleware('auth:sanctum', ['except' => ['index']]);
-    }
+    }*/
 
     /**
      * Display a listing of the resource.

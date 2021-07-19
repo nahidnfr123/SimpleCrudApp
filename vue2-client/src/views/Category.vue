@@ -2,7 +2,7 @@
     <div class="px-4 py-4">
         <h3>Categories</h3>
 
-        <form @submit.stop.prevent="addNewCategory()">
+        <form @submit.stop.prevent="addNewCategory()" v-if="$isLoggedIn">
             <v-row class="px-4 mt-2 mb-5">
                 <v-text-field
                     label="Add Category"
