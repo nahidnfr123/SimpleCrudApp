@@ -6,14 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Category\CreateCategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class CategoryController extends Controller
 {
-   /* public function __construct()
-    {
-        $this->middleware('auth:sanctum', ['except' => ['index']]);
-    }*/
+    /* public function __construct()
+     {
+         $this->middleware('auth:sanctum', ['except' => ['index']]);
+     }*/
     /**
      * Display a listing of the resource.
      *
@@ -88,10 +90,15 @@ class CategoryController extends Controller
      * Remove the specified resource from storage.
      *
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return CategoryResource
      */
     public function destroy($id)
     {
-        //
+        $category = Category::findOrFail($id);
+        if ($category->products->count() > 0) {
+            return response()->json(["errorMsg" => 'Cannot delete category! There are products linked to this category!'], 500);
+        }
+        abort_unless($category && $category->forceDelete(), 500, 'Unable to delete category!');
+        return new CategoryResource($category);
     }
 }

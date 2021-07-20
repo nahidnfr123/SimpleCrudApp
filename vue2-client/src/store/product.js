@@ -69,7 +69,7 @@ export default {
         },
         async deleteProduct({commit, dispatch}, value) {
             await HTTP
-                .delete(`/api/product/${value.id}`, value)
+                .delete(`/api/product/${value.id}`)
                 .then((response) => {
                     commit("removeProducts", response.data.data);
                     dispatch("clearErrors", []);

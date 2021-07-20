@@ -1,12 +1,13 @@
 <template>
     <ul class="category-ul">
+        <p class="error" v-if="errors && errors.length">{{ errors }}</p>
         <li v-for="category in categories" :key="'category' + category.id">
             <v-row align="center" justify="space-between" class="py-2">
                 <div>{{ category.name }}</div>
                 <div v-if="$isLoggedIn">
-<!--                    <v-btn primary tile x-small color="primary"> Add </v-btn>
-                    <v-btn primary tile x-small color="warning"> Edit </v-btn>
-                    <v-btn primary tile x-small color="error"> Delete </v-btn>-->
+                    <!--                    <v-btn primary x-small color="primary"> Add</v-btn>
+                                        <v-btn primary x-small color="warning"> Edit</v-btn>-->
+                    <v-btn primary x-small color="error" @click="deleteRequest(category)"> Delete</v-btn>
                 </div>
             </v-row>
 
@@ -19,6 +20,8 @@
 </template>
 
 <script>
+import {mapActions, mapGetters} from "vuex";
+
 export default {
     name: "CategoryTreeView",
     props: {
@@ -28,6 +31,28 @@ export default {
             },
         },
     },
+    data() {
+        return {
+            errors: [],
+        }
+    },
+    computed: {
+        ...mapGetters({
+            getErrors: "errors"
+        })
+    },
+    methods: {
+        ...mapActions({
+            deleteCategory: 'deleteCategory'
+        }),
+        deleteRequest(category) {
+            this.deleteCategory(category).then(() => {
+                if (this.getErrors) {
+                    this.errors = this.getErrors
+                }
+            });
+        }
+    }
 };
 </script>
 

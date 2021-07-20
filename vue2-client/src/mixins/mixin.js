@@ -15,3 +15,4 @@ const LoggedInUser = {
     }
 };
 Vue.mixin(LoggedInUser);
+

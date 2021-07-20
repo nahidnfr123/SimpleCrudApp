@@ -1,4 +1,5 @@
-import { HTTP } from "@/plugins/http";
+import {HTTP} from "@/plugins/http";
+import _ from "lodash";
 
 export default {
     state: {
@@ -10,35 +11,63 @@ export default {
         }
     },
     mutations: {
-        updateCategories(state, value) {
+        setCategories(state, value) {
             state.categories = value;
+        },
+        updateProducts(state, value) {
+            state.categories.map(to => {
+                if (to.id == value.id) {
+                    for (let key in value) {
+                        to[key] = value[key];
+                    }
+                }
+            });
         },
         addNewCategory(state, value) {
             state.categories.push(value);
-        }
+        },
+        removeCategory(state, data) {
+
+        },
     },
     actions: {
-        // eslint-disable-next-line no-unused-vars
-        async setCategories({ commit, dispatch }) {
+        async setCategories({commit, dispatch}) {
             return await HTTP
                 .get("api/category")
                 .then((response) => {
-                    commit("updateCategories", response.data.data);
+                    commit("setCategories", response.data.data);
+                    dispatch("clearErrors", []);
                 })
                 .catch((errors) => {
                     dispatch("setErrors", errors);
                 });
         },
-        async addCategory({ commit, dispatch }, data) {
+        async addCategory({commit, dispatch}, data) {
             return await HTTP
                 .post("api/category", data)
                 .then((response) => {
-                    if (response) {
-                        commit("addNewCategory", response.data.data);
-                    }
+                    if (response) commit("addNewCategory", response.data.data);
+                    dispatch("clearErrors", []);
                 })
                 .catch((errors) => {
                     dispatch("setErrors", errors);
+                });
+        },
+        async deleteCategory({commit, dispatch}, value) {
+            await HTTP
+                .delete(`/api/category/${value.id}`,)
+                .then((response) => {
+                    //commit("removeCategory", response.data.data);
+                    dispatch("setCategories");
+                    dispatch("clearErrors", []);
+                })
+                .catch((error) => {
+                    let customErrorMessage = null;
+                    if (error.response && error.response.status === 500) {
+                        commit('updateErrors', error.response.data.errorMsg);
+                        return;
+                    }
+                    dispatch("setErrors", error, customErrorMessage);
                 });
         }
     }

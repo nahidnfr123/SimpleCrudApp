@@ -131,7 +131,7 @@ class ProductController extends Controller
      * @param int $id
      * @return ProductResource
      */
-    public function destroy($id)
+    public function destroy($id): ProductResource
     {
         $product = Product::findOrFail($id);
         abort_unless($product && $product->forceDelete(), 500, 'Unable to delete product!');
