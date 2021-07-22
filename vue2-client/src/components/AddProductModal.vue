@@ -156,6 +156,21 @@ export default {
             errors: {}
         };
     },
+    watch: {
+        dialog: function (val, oldVal) {
+            if (val === false) {
+                this.addProductFormData = {
+                    name: "",
+                    price: "",
+                    total_stock: "",
+                    status: 1,
+                    image: "",
+                    description: "",
+                    categoriesId: [],
+                };
+            }
+        }
+    },
     computed: {
         ...mapGetters({
             categories: "categories",

@@ -95,8 +95,18 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         $category = Category::findOrFail($id);
-        if ($category->products->count() > 0) {
-            return response()->json(["errorMsg" => 'Cannot delete category! There are products linked to this category!'], 500);
+
+        $proCounter = $category->products->count() ?: 0;
+        if (count($category->children)) {
+            foreach ($category->children as $child) {
+                if ($child->products->count()) {
+                    $proCounter += $child->products->count();
+                }
+            }
+        }
+
+        if ($proCounter > 0) {
+            return response()->json(["errorMsg" => "Cannot delete category! There are products linked to this category or it's subcategories!"], 500);
         }
         abort_unless($category && $category->forceDelete(), 500, 'Unable to delete category!');
         return new CategoryResource($category);

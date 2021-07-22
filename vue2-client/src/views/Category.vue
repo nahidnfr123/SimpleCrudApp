@@ -2,6 +2,15 @@
     <div class="px-4 py-4">
         <h3>Categories</h3>
 
+        <v-alert
+            border="top"
+            color="red lighten-2"
+            dark
+            v-if="errors && errors.length"
+        >
+            {{ errors }}
+        </v-alert>
+
         <form @submit.stop.prevent="addNewCategory()" v-if="$isLoggedIn">
             <v-row class="px-4 mt-2 mb-5">
                 <v-text-field
@@ -28,7 +37,9 @@
                 </div>
                 <CategoryTreeView
                     v-if="categories && categories.length"
-                    :categories="categories"/>
+                    :categories="categories"
+                    @category_error="category_error($event)"
+                />
             </div>
         </v-card>
     </div>
@@ -101,6 +112,9 @@ export default {
                 name: "",
             };
         },
+        category_error(value) {
+            this.errors = value;
+        }
     },
 };
 </script>
