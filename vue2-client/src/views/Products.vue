@@ -43,7 +43,7 @@
                             </td>
                             <td>
                                 <img v-if="product.image" :src="$apiURL+product.image" height="30px" alt=""/>
-                                <div>{{ product.name }}</div>
+                                <strong>{{ product.name }}</strong>
                             </td>
                             <td>
                                 <div v-if="product.categories">
