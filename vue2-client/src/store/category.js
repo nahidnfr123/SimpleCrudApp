@@ -46,7 +46,11 @@ export default {
             return await HTTP
                 .post("api/category", data)
                 .then((response) => {
-                    if (response) commit("addNewCategory", response.data.data);
+                    if (!data.parent_id) {
+                        if (response) commit("addNewCategory", response.data.data);
+                    } else {
+                        dispatch("setCategories");
+                    }
                     dispatch("clearErrors", []);
                 })
                 .catch((errors) => {

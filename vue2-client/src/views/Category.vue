@@ -39,6 +39,9 @@
                     v-if="categories && categories.length"
                     :categories="categories"
                     @category_error="category_error($event)"
+                    @showSubcategoryForm="showSubcategoryForm($event)"
+                    :showSubcategoryFormFor="showSubcategoryFormFor"
+                    @closeForm="showSubcategoryFormFor = 0"
                 />
             </div>
         </v-card>
@@ -60,6 +63,7 @@ export default {
     },
     data() {
         return {
+            showSubcategoryFormFor: 0,
             loadingCategories: false,
             categoryForm: {
                 name: "",
@@ -76,14 +80,14 @@ export default {
             addCategory: "addCategory",
             clearErrors: "clearErrors",
         }),
+        showSubcategoryForm(id) {
+            this.showSubcategoryFormFor = id;
+        },
         loadCategories() {
             this.loadingCategories = true;
             this.getCategories().finally(() => {
                 this.loadingCategories = false;
             });
-        },
-        deleteCategory(event) {
-            console.log(event);
         },
         validateData() {
             if (!this.categoryForm.name)

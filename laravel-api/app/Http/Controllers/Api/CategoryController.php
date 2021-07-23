@@ -49,6 +49,9 @@ class CategoryController extends Controller
         $category = new Category();
         $category->user_id = 1;
         $category->name = $request->name;
+        if ($request->parent_id && $request->parent_id != 0) {
+            $category->parent_id = $request->parent_id;
+        }
         $category->save();
         return new CategoryResource($category);
     }
@@ -95,7 +98,14 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        $category = Category::findOrFail($id);
+        //$category = Category::findOrFail($id);
+        $category = Category::where('id', $id)
+            ->withCount('products')
+            ->with(['children.children' => function ($query) {
+                $query->withCount('products');
+            }])
+            ->get();
+
         // Check ... Products count for ... selected category
         if ($category->products_count > 0) {
             return response()->json(["errorMsg" => "Cannot delete category! There are products linked to this category!"], 500);

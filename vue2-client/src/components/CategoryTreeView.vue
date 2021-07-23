@@ -9,8 +9,8 @@
                             <span class="small-text text-primary" v-if="category.products_count_total > 0"> - Total: ({{ category.products_count_total }})</span>
                         </div>
                         <div v-if="$isLoggedIn">
-                            <v-btn primary x-small color="primary" @click="showSubcategoryFormFor=category.id">Add</v-btn>
-                            <!--<v-btn primary x-small color="warning ml-1">Edit</v-btn>-->
+                            <v-btn primary x-small color="primary" @click="showForm(category.id)">Add</v-btn>
+                            <v-btn primary x-small color="warning ml-1">Edit</v-btn>
                             <v-btn primary x-small color="error ml-1" @click="deleteRequest(category)">Delete</v-btn>
                         </div>
                     </v-row>
@@ -18,8 +18,9 @@
 
                 <!-- Add or edit category -->
                 <SubcategoryForm
-                    :showSubcategoryFormFor="showSubcategoryFormFor"
+                    v-if="showSubcategoryFormFor === category.id "
                     :parent_category_id="category.id"
+                    @closeForm="closeForm()"
                 />
 
             </v-row>
@@ -27,6 +28,9 @@
             <CategoryTreeView
                 v-if="category.children && category.children.length"
                 :categories="category.children"
+                @showSubcategoryForm="showForm($event)"
+                :showSubcategoryFormFor="showSubcategoryFormFor"
+                @closeForm="closeForm()"
             />
         </li>
     </ul>
@@ -45,11 +49,14 @@ export default {
             default: () => {
             },
         },
+        showSubcategoryFormFor: {
+            type: Number,
+            default: 0
+        }
     },
     data() {
         return {
             errors: [],
-            showSubcategoryFormFor: 0,
             categoryForm: {
                 name: '',
             }
@@ -66,7 +73,7 @@ export default {
         }),
         deleteRequest(category) {
             // Remove previous errors..
-            this.errors = {};
+            this.errors = [];
             this.$emit('category_error', this.errors);
 
             this.deleteCategory(category).then(() => {
@@ -77,8 +84,11 @@ export default {
                 }
             });
         },
-        addSubCategory() {
-
+        showForm(id) {
+            this.$emit('showSubcategoryForm', id)
+        },
+        closeForm(){
+            this.$emit('closeForm')
         }
     }
 };
@@ -92,10 +102,12 @@ export default {
 .small-text {
     font-size: 12px;
 }
-.text-danger{
+
+.text-danger {
     color: #ff3636;
 }
-.text-primary{
+
+.text-primary {
     color: dodgerblue;
 }
 </style>
