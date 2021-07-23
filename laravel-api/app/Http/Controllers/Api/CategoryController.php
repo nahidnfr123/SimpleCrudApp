@@ -104,7 +104,7 @@ class CategoryController extends Controller
             ->with(['children.children' => function ($query) {
                 $query->withCount('products');
             }])
-            ->get();
+            ->first();
 
         // Check ... Products count for ... selected category
         if ($category->products_count > 0) {
