@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\CreateProductRequest;
+use App\Http\Requests\Product\UpdateProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Model;
@@ -97,10 +98,10 @@ class ProductController extends Controller
      * @param int $id
      * @return ProductResource
      */
-    public function update(Request $request, $id)
+    public function update(UpdateProductRequest $request, Product $product)
     {
-        $product = Product::findOrFail($id);
-        if (!empty($product)) {
+        // $product = Product::findOrFail($id);
+        if ($product !== null) {
             if ($request->file()) {
                 $file_name = time() . '_' . $request->file->getClientOriginalName();
                 $file_path = $request->file('file')->storeAs('uploads', $file_name, 'public');

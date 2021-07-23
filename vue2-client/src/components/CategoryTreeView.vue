@@ -10,7 +10,7 @@
                         </div>
                         <div v-if="$isLoggedIn">
                             <v-btn primary x-small color="primary" @click="showForm(category.id)">Add</v-btn>
-                            <v-btn primary x-small color="warning ml-1">Edit</v-btn>
+                            <v-btn primary x-small color="warning ml-1" @click="showForm(category.id, 'update')">Edit</v-btn>
                             <v-btn primary x-small color="error ml-1" @click="deleteRequest(category)">Delete</v-btn>
                         </div>
                     </v-row>
@@ -19,8 +19,9 @@
                 <!-- Add or edit category -->
                 <SubcategoryForm
                     v-if="showSubcategoryFormFor === category.id "
-                    :parent_category_id="category.id"
+                    :form_category="category"
                     @closeForm="closeForm()"
+                    :form_type="formType"
                 />
 
             </v-row>
@@ -59,7 +60,8 @@ export default {
             errors: [],
             categoryForm: {
                 name: '',
-            }
+            },
+            formType: "",
         }
     },
     computed: {
@@ -84,10 +86,14 @@ export default {
                 }
             });
         },
-        showForm(id) {
+        showForm(id, formType = "") {
+            this.formType = "";
+            if (formType) {
+                this.formType = formType;
+            }
             this.$emit('showSubcategoryForm', id)
         },
-        closeForm(){
+        closeForm() {
             this.$emit('closeForm')
         }
     }

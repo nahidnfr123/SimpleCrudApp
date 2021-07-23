@@ -57,6 +57,17 @@ export default {
                     dispatch("setErrors", errors);
                 });
         },
+        async updateCategory({commit, dispatch}, combinedData) {
+            return await HTTP
+                .put(`api/category/${combinedData.id}`, combinedData.formData)
+                .then((response) => {
+                    dispatch("setCategories");
+                    dispatch("clearErrors", []);
+                })
+                .catch((errors) => {
+                    dispatch("setErrors", errors);
+                });
+        },
         async deleteCategory({commit, dispatch}, value) {
             await HTTP
                 .delete(`/api/category/${value.id}`,)

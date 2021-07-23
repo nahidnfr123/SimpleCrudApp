@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Category\CreateCategoryRequest;
+use App\Http\Requests\Category\UpdateCategoryRequest;
 use App\Http\Resources\CategoryResource;
-use App\Http\Resources\ProductCategoryResource;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -83,18 +83,24 @@ class CategoryController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return CategoryResource
      */
-    public function update(Request $request, $id)
+    public function update(UpdateCategoryRequest $request, Category $category)
     {
-        //
+        //$category = Category::findorFail($id);
+        $category->name = $request->name;
+        if ($request->parent_id && $request->parent_id != 0) {
+            $category->parent_id = $request->parent_id;
+        }
+        $category->save();
+        return new CategoryResource($category);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param int $id
-     * @return ProductCategoryResource
+     * @return CategoryResource
      */
     public function destroy($id)
     {
@@ -118,7 +124,7 @@ class CategoryController extends Controller
             return response()->json(["errorMsg" => "Cannot delete category! There are products linked to this category or it's subcategories!"], 500);
         }
         abort_unless($category && $category->forceDelete(), 500, 'Unable to delete category!');
-        return new ProductCategoryResource($category);
+        return new CategoryResource($category);
     }
 
     public function loopCategories($category, $proCounter)
