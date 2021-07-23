@@ -31,7 +31,7 @@
 
     <ul v-if="options && options.length">
         <li v-for="(option, i) in options">
-            <div class="list-item" @click.stop.prevent="nodeClicked(option)" :class="[selectedOptions.indexOf(option[valueProperty])>-1?'active':'']">
+            <div class="list-item" @click.stop.prevent="nodeClicked(option)" :class="[selectedOptions.indexOf(option[valueProperty]) > -1?'active':'']">
                 {{ option[displayProperty] }}
             </div>
             <hr>

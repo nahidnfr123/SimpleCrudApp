@@ -108,7 +108,7 @@
                     <v-divider></v-divider>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="primary" tile @click="postRequest()">
+                        <v-btn color="primary" @click="postRequest()">
                             <span v-if="formType=='update'">Update</span>
                             <span v-else>Save</span>
                         </v-btn>
@@ -159,15 +159,7 @@ export default {
     watch: {
         dialog: function (val, oldVal) {
             if (val === false) {
-                this.addProductFormData = {
-                    name: "",
-                    price: "",
-                    total_stock: "",
-                    status: 1,
-                    image: "",
-                    description: "",
-                    categoriesId: [],
-                };
+                //this.clearForm();
             }
         }
     },
@@ -214,7 +206,6 @@ export default {
             } else {
                 this.addProductFormData.categoriesId.push(data.id);
             }
-
         },
         validation() {
 
@@ -266,6 +257,18 @@ export default {
                 });
             }
         },
+        clearForm() {
+            //this.dataToUpdate = {}
+            this.addProductFormData = {
+                name: "",
+                price: "",
+                total_stock: "",
+                status: 1,
+                image: "",
+                description: "",
+                categoriesId: [],
+            };
+        }
     }
 };
 </script>

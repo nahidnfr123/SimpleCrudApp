@@ -24,30 +24,8 @@ class CategoryController extends Controller
      */
     public function index(): \Illuminate\Http\JsonResponse
     {
-        /*$productCategory = cache()->remember('categories', 3600, function () {
-            return
-        });*/
-        $productCategory = Category::whereNull('parent_id')
-            ->withCount('products')
-            ->with(['children.children' => function ($query) {
-                $query->withCount('products');
-            }])
-            //}, 'children.products'])
-            //->with('products')
-            ->get();
-
-        /*foreach ($productCategory as $parentCategory) {
-            foreach ($parentCategory->children as $category) {
-                $category->products_count = $category->children->sum('products_count');
-            }
-            $parentCategory->products_count = $parentCategory->children->sum('products_count');
-        }*/
-
-        //return response()->json(['data' => $productCategory], 200);
-        return (ProductCategoryResource::collection($productCategory))->response();
-
-        /*return (CategoryResource::collection($productCategory))->response();
-        $productCategory = Category::whereNull('parent_id')->get();*/
+        $productCategory = Category::whereNull('parent_id')->get();
+        return (CategoryResource::collection($productCategory))->response();
     }
 
     /**
@@ -117,24 +95,14 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        //$category = Category::findOrFail($id);
-
-        $category = Category::where('id', $id)
-            ->withCount('products')
-            ->with(['children.children' => function ($query) {
-                $query->withCount('products');
-            }])
-            ->first();
-
+        $category = Category::findOrFail($id);
         // Check ... Products count for ... selected category
         if ($category->products_count > 0) {
             return response()->json(["errorMsg" => "Cannot delete category! There are products linked to this category!"], 500);
         }
-
         // Check ... Products count for ... SubCategories of selected category
         $proCounter = 0;
         $proCounter = $this->loopCategories($category, $proCounter);
-        //return response()->json(["errorMsg" => $proCounter, 'ukggb' => $category->children], 200);
 
         if ($proCounter > 0) {
             return response()->json(["errorMsg" => "Cannot delete category! There are products linked to this category or it's subcategories!"], 500);

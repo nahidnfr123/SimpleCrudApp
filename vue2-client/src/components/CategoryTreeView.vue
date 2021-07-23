@@ -5,8 +5,8 @@
                 <v-col cols="12">
                     <v-row align="center" justify="space-between" class="py-2">
                         <div>{{ category.name }}
-                            <span class="small-text" v-if="category.products_count > 0"> - ({{ category.products_count }}) Products</span>
-                            <span class="small-text" v-if="category.products_count_total > 0"> - Total: ({{ category.products_count_total }})</span>
+                            <span class="small-text text-danger" v-if="category.products_count > 0"> - ({{ category.products_count }}) Products</span>
+                            <span class="small-text text-primary" v-if="category.products_count_total > 0"> - Total: ({{ category.products_count_total }})</span>
                         </div>
                         <div v-if="$isLoggedIn">
                             <v-btn primary x-small color="primary" @click="showSubcategoryFormFor=category.id">Add</v-btn>
@@ -91,6 +91,11 @@ export default {
 
 .small-text {
     font-size: 12px;
+}
+.text-danger{
     color: #ff3636;
+}
+.text-primary{
+    color: dodgerblue;
 }
 </style>
