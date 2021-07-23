@@ -53,7 +53,8 @@ class ProductTableSeeder extends Seeder
         $product->price = 500;
         $product->description = 'This is product description 3.';
         $product->save();
-        $product->productCategory()->attach(1);
+        $product->productCategory()->attach(7);
+        $product->productCategory()->attach(8);
 
 
         $product = new Product();
@@ -82,6 +83,18 @@ class ProductTableSeeder extends Seeder
         $product->save();
         $product->productCategory()->attach(3);
         $product->productCategory()->attach(2);
+
+        $product = new Product();
+        $product->user_id = 1;
+        $product->name = 'Product name 6';
+        $product->slug = 'product_name_6';
+        $product->image = null;
+        $product->status = true;
+        $product->total_stock = 40;
+        $product->price = 505;
+        $product->description = 'This is product description 6.';
+        $product->save();
+        $product->productCategory()->attach(9);
 
     }
 }

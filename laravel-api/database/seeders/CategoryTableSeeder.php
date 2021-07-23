@@ -66,5 +66,26 @@ class CategoryTableSeeder extends Seeder
             'slug' => 'category_3_2_2',
             'parent_id' => 6,
         ]);
+
+        Category::updateOrCreate([
+            'user_id' => 1,
+            'name' => 'category 2.1',
+            'slug' => 'category_2_1',
+            'parent_id' => 2,
+        ]);
+
+        Category::updateOrCreate([
+            'user_id' => 1,
+            'name' => 'category 2.1.1',
+            'slug' => 'category_2_1_1',
+            'parent_id' => 9,
+        ]);
+
+        Category::updateOrCreate([
+            'user_id' => 1,
+            'name' => 'category 3.2.1.1',
+            'slug' => 'category_3_2_1_1',
+            'parent_id' => 7,
+        ]);
     }
 }

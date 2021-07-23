@@ -5,32 +5,23 @@
                 <v-col cols="12">
                     <v-row align="center" justify="space-between" class="py-2">
                         <div>{{ category.name }}
-                            <span class="small-text" v-if="category.product_count > 0"> - ({{ category.product_count }}) Products</span>
-                            <span class="small-text" v-if="category.product_counter > 0"> > ({{ category.product_counter }}) Total</span>
+                            <span class="small-text" v-if="category.products_count > 0"> - ({{ category.products_count }}) Products</span>
+                            <span class="small-text" v-if="category.products_count_total > 0"> - Total: ({{ category.products_count_total }})</span>
                         </div>
                         <div v-if="$isLoggedIn">
-                            <v-btn primary x-small color="primary" @click="showSubcategoryFormFor=category.id"> Add</v-btn>
-                            <!--                    <v-btn primary x-small color="warning"> Edit</v-btn>-->
-                            <v-btn primary x-small color="error" @click="deleteRequest(category)"> Delete</v-btn>
+                            <v-btn primary x-small color="primary" @click="showSubcategoryFormFor=category.id">Add</v-btn>
+                            <!--<v-btn primary x-small color="warning ml-1">Edit</v-btn>-->
+                            <v-btn primary x-small color="error ml-1" @click="deleteRequest(category)">Delete</v-btn>
                         </div>
                     </v-row>
                 </v-col>
-                <v-col cols="12" v-if="showSubcategoryFormFor === category.id ">
-                    <form @submit.stop.prevent="addSubCategory(category.id)" v-if="$isLoggedIn">
-                        <v-row class="px-4 mt-2 mb-5">
-                            <v-text-field
-                                small
-                                label="Add Category"
-                                hide-details="auto"
-                                v-model="categoryForm.name"
-                            ></v-text-field>
-                            <v-btn small color="primary" @click="addSubCategory(category.id)">Add Category</v-btn>
-                        </v-row>
-                        <p style="color: red; font-size: 12px" v-if="errors.name">
-                            {{ Array.isArray(errors.name) ? errors.name[0] : errors.name }}
-                        </p>
-                    </form>
-                </v-col>
+
+                <!-- Add or edit category -->
+                <SubcategoryForm
+                    :showSubcategoryFormFor="showSubcategoryFormFor"
+                    :parent_category_id="category.id"
+                />
+
             </v-row>
 
             <CategoryTreeView
@@ -43,9 +34,11 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
+import SubcategoryForm from "@/components/SubcategoryForm";
 
 export default {
     name: "CategoryTreeView",
+    components: {SubcategoryForm},
     props: {
         categories: {
             type: Array,
@@ -93,10 +86,11 @@ export default {
 
 <style>
 .category-ul li {
-    padding: 10px 0 10px 6px !important;
+    padding: 0 0 0 6px !important;
 }
 
 .small-text {
     font-size: 12px;
+    color: #ff3636;
 }
 </style>
